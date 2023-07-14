@@ -6,19 +6,25 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+@ActiveProfiles("default")
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {TestConfig.class})
-class SimpleJpaRepositoryImplIIT {
+class SimpleJpaRepositoryImplDefaultIT extends AbstractSimpleJpaRepositoryImplIT{
 
   @Autowired
   private UserRepository userRepository;
 
-  @Test
-  public void contextTest() {
-    userRepository.save(new User("test","test","test",new Role("test")));
+  @Override
+  protected UserRepository userRepository() {
+    return userRepository;
   }
 
+  @Override
+  protected CACHE_STRATEGY childExpectedCacheStrategy() {
+    return CACHE_STRATEGY.L1_CACHE_ACTIVE;
+  }
 }
 

@@ -52,7 +52,7 @@ public class SimpleJpaRepositoryImpl<T, ID> extends SimpleJpaRepository<T, ID> {
   }
 
   private <S extends T> void clearL1Cache(S s) {
-    if (CacheManager.getCacheStrategy() != CACHE_STRATEGY.ENABLED) {
+    if (CacheManager.getCacheStrategy() != CACHE_STRATEGY.L1_CACHE_ACTIVE) {
       final Session session = entityManager.unwrap(Session.class);
       if (session.contains(s)) {
         if (CacheManager.getCacheStrategy() == CACHE_STRATEGY.EVICT) {
@@ -72,7 +72,9 @@ public class SimpleJpaRepositoryImpl<T, ID> extends SimpleJpaRepository<T, ID> {
   @Transactional
   public <S extends T> S save(S entity) {
     final S save = super.save(entity);
-    clearL1Cache(save);
+    if(CACHE_STRATEGY.L1_CACHE_ACTIVE !=CacheManager.getCacheStrategy()) {
+      clearL1Cache(save);
+    }
     return save;
   }
 

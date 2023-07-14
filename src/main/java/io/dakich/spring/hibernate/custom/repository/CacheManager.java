@@ -14,7 +14,7 @@ public class CacheManager {
       .build();
 
   private CacheManager() {
-    throw new UnsupportedOperationException("DONT USE REFLECTION....");
+    throw new UnsupportedOperationException("REFLECTION !? :)");
   }
 
   public static CACHE_STRATEGY getCacheStrategy() {
@@ -25,7 +25,7 @@ public class CacheManager {
     switch (cacheStrategy) {
       case "detach" -> APP_CACHE.put(L1_CACHE_STRATEGY_KEY, CACHE_STRATEGY.DETACH);
       case "evict" -> APP_CACHE.put(L1_CACHE_STRATEGY_KEY, CACHE_STRATEGY.EVICT);
-      default -> APP_CACHE.put(L1_CACHE_STRATEGY_KEY, CACHE_STRATEGY.ENABLED);
+      default -> APP_CACHE.put(L1_CACHE_STRATEGY_KEY, CACHE_STRATEGY.L1_CACHE_ACTIVE);
     }
   }
 

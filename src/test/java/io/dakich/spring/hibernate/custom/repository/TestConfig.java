@@ -3,6 +3,8 @@ package io.dakich.spring.hibernate.custom.repository;
 import jakarta.persistence.EntityManagerFactory;
 import java.util.Properties;
 import javax.sql.DataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +24,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
     repositoryBaseClass = SimpleJpaRepositoryImpl.class)
 @EnableTransactionManagement
 public class TestConfig {
-
+  private static final Logger LOG= LoggerFactory.getLogger(TestConfig.class);
   @Autowired
   private Environment env;
 
@@ -68,7 +70,7 @@ public class TestConfig {
   @EventListener
   public void handleContextRefreshEvent(ContextRefreshedEvent ctxStartEvt) {
     CacheManager.setCacheStrategy(env.getProperty("hibernate.l1.cache.strategy", "default"));
-    System.err.println("CACHE STRATEGY:"+CacheManager.getCacheStrategy());
+    LOG.error("CACHE STRATEGY:"+CacheManager.getCacheStrategy());
   }
 
 }

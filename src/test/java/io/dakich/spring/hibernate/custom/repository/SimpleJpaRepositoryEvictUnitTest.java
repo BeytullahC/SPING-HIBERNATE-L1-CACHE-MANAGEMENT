@@ -9,13 +9,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.springframework.data.jpa.repository.support.MutableQueryHints;
 
 
-public class SimpleJpaRepositoryDefaultUnitTest extends
+public class SimpleJpaRepositoryEvictUnitTest extends
     AbstractSimpleJpaRepositoryUnitTests {
 
 
   @BeforeEach
   void setUp() {
-    CacheManager.setCacheStrategy("default");
+    CacheManager.setCacheStrategy("evict");
     when(em.getDelegate()).thenReturn(em);
 
     when(information.getJavaType()).thenReturn(User.class);
@@ -30,7 +30,7 @@ public class SimpleJpaRepositoryDefaultUnitTest extends
     MutableQueryHints hints = new MutableQueryHints();
     when(metadata.getQueryHints()).thenReturn(hints);
     when(metadata.getQueryHintsForCount()).thenReturn(hints);
-    when(session.contains(any())).thenReturn(false);
+    when(session.contains(any())).thenReturn(true);
     when(em.unwrap(Session.class)).thenReturn(session);
     repo = new SimpleJpaRepositoryImpl<>(information, em);
     repo.setRepositoryMethodMetadata(metadata);

@@ -3,4 +3,4 @@
 
 ## About
 
-This project manages Hibernate L1 Cache via Custom SimpleJpaRepository Implementation
+This project manages Hibernate L1 Cache via Custom SimpleJpaRepository Implementation.

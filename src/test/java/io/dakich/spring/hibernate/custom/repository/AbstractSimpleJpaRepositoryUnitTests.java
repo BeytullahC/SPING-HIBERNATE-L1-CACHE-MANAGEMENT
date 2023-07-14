@@ -178,7 +178,7 @@ abstract class AbstractSimpleJpaRepositoryUnitTests {
     verify(em, never()).merge(newUser);
   }
 
-  @Test // DATAJPA-1535
+  @Test
   void doNothingWhenNonExistentInstanceGetsDeleted() {
 
     User newUser = new User();

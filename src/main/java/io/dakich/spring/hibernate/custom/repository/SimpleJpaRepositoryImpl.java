@@ -40,13 +40,13 @@ public class SimpleJpaRepositoryImpl<T, ID> extends SimpleJpaRepository<T, ID> {
 
   private <S extends T> void clearL1Cache(Optional<S> one) {
     if (one.isPresent()) {
-      clearL1Cache(one);
+      clearL1Cache(one.get());
     }
   }
 
 
   private void clearL1Cache(Page<T> all) {
-    if (all != null && !all.isEmpty() && !all.toList().isEmpty()) {
+    if (all != null && !all.isEmpty()) {
       clearL1Cache(all.toList());
     }
   }
@@ -61,7 +61,7 @@ public class SimpleJpaRepositoryImpl<T, ID> extends SimpleJpaRepository<T, ID> {
           session.detach(s);
         }
         if (LOGGER.isDebugEnabled() && !session.contains(s)) {
-          LOGGER.debug("L1 CACHE Clear  for {}", s.toString());
+          LOGGER.debug("L1 CACHE Clear");
         }
       }
 
@@ -72,9 +72,8 @@ public class SimpleJpaRepositoryImpl<T, ID> extends SimpleJpaRepository<T, ID> {
   @Transactional
   public <S extends T> S save(S entity) {
     final S save = super.save(entity);
-    if (CACHE_STRATEGY.L1_CACHE_ACTIVE != CacheManager.getCacheStrategy()) {
-      clearL1Cache(save);
-    }
+    entityManager.flush();
+    clearL1Cache(save);
     return save;
   }
 

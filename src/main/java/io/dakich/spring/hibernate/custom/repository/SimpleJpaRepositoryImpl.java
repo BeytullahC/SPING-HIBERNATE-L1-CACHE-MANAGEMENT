@@ -72,7 +72,7 @@ public class SimpleJpaRepositoryImpl<T, ID> extends SimpleJpaRepository<T, ID> {
   @Transactional
   public <S extends T> S save(S entity) {
     final S save = super.save(entity);
-    if(CACHE_STRATEGY.L1_CACHE_ACTIVE !=CacheManager.getCacheStrategy()) {
+    if (CACHE_STRATEGY.L1_CACHE_ACTIVE != CacheManager.getCacheStrategy()) {
       clearL1Cache(save);
     }
     return save;

@@ -23,6 +23,14 @@ jobs:
           jacoco-csv-file: target/site/jacoco-aggregate/jacoco.csv
           badges-directory: .github/badges
           generate-coverage-badge: true
+          generate-branches-badge: true
+          branches-badge-filename: branches.svg
+          generate-coverage-endpoint: true
+          coverage-endpoint-filename: jacoco.json
+          generate-branches-endpoint: true
+          branches-endpoint-filename: branches.json
+          generate-summary: true
+          summary-filename: coverage-summary.json
       - name: Commit the badge (if it changed)
         run: |
           if [[ `git status --porcelain` ]]; then

@@ -15,7 +15,13 @@ import jakarta.persistence.PersistenceUnitUtil;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import org.hibernate.Session;
 import org.junit.jupiter.api.Assertions;
@@ -27,6 +33,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.EntityGraph.EntityGraphType;
 import org.springframework.data.jpa.repository.support.CrudMethodMetadata;
@@ -196,7 +204,8 @@ abstract class AbstractSimpleJpaRepositoryUnitTests {
     verify(em, never()).merge(newUser);
   }
 
-  @Test // GH-2054
+  @Test
+    // GH-2054
   void applyQueryHintsToCountQueriesForSpecificationPageables() {
 
     when(query.getResultList()).thenReturn(Arrays.asList(new User(), new User()));
@@ -204,5 +213,129 @@ abstract class AbstractSimpleJpaRepositoryUnitTests {
     repo.findAll(where(null), PageRequest.of(2, 1));
 
     verify(metadata).getQueryHintsForCount();
+  }
+
+
+  @Test
+  void testClearL1CacheListEmpty() {
+    MethodHandles.Lookup lookup = MethodHandles.lookup();
+    MethodType methodType = MethodType.methodType(void.class, List.class);
+    try {
+      lookup = MethodHandles.privateLookupIn(SimpleJpaRepositoryImpl.class, lookup);
+      MethodHandle handle = lookup.findVirtual(SimpleJpaRepositoryImpl.class, "clearL1Cache",
+          methodType);
+      handle.invoke(new SimpleJpaRepositoryImpl<>(information, em), new ArrayList<>());
+    } catch (Throwable x) {
+      x.printStackTrace();
+    }
+  }
+
+  @Test
+  void testClearL1CacheListNull() {
+    MethodHandles.Lookup lookup = MethodHandles.lookup();
+    MethodType methodType = MethodType.methodType(void.class, List.class);
+    try {
+      lookup = MethodHandles.privateLookupIn(SimpleJpaRepositoryImpl.class, lookup);
+      MethodHandle handle = lookup.findVirtual(SimpleJpaRepositoryImpl.class, "clearL1Cache",
+          methodType);
+      handle.invoke(new SimpleJpaRepositoryImpl<>(information, em), null);
+    } catch (Throwable x) {
+      x.printStackTrace();
+    }
+  }
+
+  @Test
+  void testClearL1CacheOptionalEmpty() {
+    MethodHandles.Lookup lookup = MethodHandles.lookup();
+    MethodType methodType = MethodType.methodType(void.class, Optional.class);
+    try {
+      lookup = MethodHandles.privateLookupIn(SimpleJpaRepositoryImpl.class, lookup);
+      MethodHandle handle = lookup.findVirtual(SimpleJpaRepositoryImpl.class, "clearL1Cache",
+          methodType);
+      handle.invoke(new SimpleJpaRepositoryImpl<User, Integer>(information, em),
+          Optional.of(new User()));
+    } catch (Throwable x) {
+      x.printStackTrace();
+    }
+  }
+
+  @Test
+  void testClearL1CacheOptionalNull() {
+    MethodHandles.Lookup lookup = MethodHandles.lookup();
+    MethodType methodType = MethodType.methodType(void.class, Optional.class);
+    try {
+      lookup = MethodHandles.privateLookupIn(SimpleJpaRepositoryImpl.class, lookup);
+      MethodHandle handle = lookup.findVirtual(SimpleJpaRepositoryImpl.class, "clearL1Cache",
+          methodType);
+      handle.invoke(new SimpleJpaRepositoryImpl<User, Integer>(information, em), null);
+    } catch (Throwable x) {
+      x.printStackTrace();
+    }
+  }
+
+  @Test
+  void testClearL1CacheOptionalGetNull() {
+    MethodHandles.Lookup lookup = MethodHandles.lookup();
+    MethodType methodType = MethodType.methodType(void.class, Optional.class);
+    try {
+      lookup = MethodHandles.privateLookupIn(SimpleJpaRepositoryImpl.class, lookup);
+      MethodHandle handle = lookup.findVirtual(SimpleJpaRepositoryImpl.class, "clearL1Cache",
+          methodType);
+      handle.invoke(new SimpleJpaRepositoryImpl<User, Integer>(information, em),
+          Optional.ofNullable(null));
+    } catch (Throwable x) {
+      x.printStackTrace();
+    }
+  }
+
+  @Test
+  void testClearL1CachePageEmpty() {
+    MethodHandles.Lookup lookup = MethodHandles.lookup();
+    MethodType methodType = MethodType.methodType(void.class, Page.class);
+    try {
+      lookup = MethodHandles.privateLookupIn(SimpleJpaRepositoryImpl.class, lookup);
+      MethodHandle handle = lookup.findVirtual(SimpleJpaRepositoryImpl.class, "clearL1Cache",
+          methodType);
+      handle.invoke(new SimpleJpaRepositoryImpl<User, Integer>(information, em),
+          new PageImpl(new ArrayList<>()));
+    } catch (Throwable x) {
+      x.printStackTrace();
+    }
+  }
+
+  @Test
+  void testClearL1CachePageContentNull() throws IllegalAccessException, NoSuchMethodException {
+    MethodHandles.Lookup lookup = MethodHandles.lookup();
+    MethodType methodType = MethodType.methodType(void.class, Page.class);
+    lookup = MethodHandles.privateLookupIn(SimpleJpaRepositoryImpl.class, lookup);
+    MethodHandle handle = lookup.findVirtual(SimpleJpaRepositoryImpl.class, "clearL1Cache",
+        methodType);
+    Assertions.assertThrows(IllegalArgumentException.class,
+        () -> handle.invoke(new SimpleJpaRepositoryImpl<User, Integer>(information, em),
+            new PageImpl(null)));
+  }
+
+  @Test
+  void testClearL1CachePage() throws Throwable {
+    MethodHandles.Lookup lookup = MethodHandles.lookup();
+    MethodType methodType = MethodType.methodType(void.class, Page.class);
+    lookup = MethodHandles.privateLookupIn(SimpleJpaRepositoryImpl.class, lookup);
+    MethodHandle handle = lookup.findVirtual(SimpleJpaRepositoryImpl.class, "clearL1Cache",
+        methodType);
+    Assertions.assertDoesNotThrow(
+        () -> handle.invoke(new SimpleJpaRepositoryImpl<User, Integer>(information, em),
+            new PageImpl(
+                Collections.singletonList(new User()))));
+  }
+
+  @Test
+  void testClearL1CachePageNull() throws Throwable {
+    MethodHandles.Lookup lookup = MethodHandles.lookup();
+    MethodType methodType = MethodType.methodType(void.class, Page.class);
+    lookup = MethodHandles.privateLookupIn(SimpleJpaRepositoryImpl.class, lookup);
+    MethodHandle handle = lookup.findVirtual(SimpleJpaRepositoryImpl.class, "clearL1Cache",
+        methodType);
+    Assertions.assertDoesNotThrow(
+        () -> handle.invoke(new SimpleJpaRepositoryImpl<User, Integer>(information, em), null));
   }
 }

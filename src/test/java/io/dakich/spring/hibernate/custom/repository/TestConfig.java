@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.context.event.ContextStartedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -31,7 +30,7 @@ public class TestConfig {
   @Bean
   public DataSource dataSource() {
     final DriverManagerDataSource dataSource = new DriverManagerDataSource();
-    dataSource.setDriverClassName(env.getProperty("jdbc.driverClassName"));
+    dataSource.setDriverClassName(env.getProperty("jdbc.driverClassName","not found"));
     dataSource.setUrl(env.getProperty("jdbc.url"));
     dataSource.setUsername(env.getProperty("jdbc.user"));
     dataSource.setPassword(env.getProperty("jdbc.pass"));
@@ -43,7 +42,7 @@ public class TestConfig {
   public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
     final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
     em.setDataSource(dataSource);
-    em.setPackagesToScan(new String[]{"io.dakich"});
+    em.setPackagesToScan("io.dakich");
     em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
     em.setJpaProperties(additionalProperties());
     return em;

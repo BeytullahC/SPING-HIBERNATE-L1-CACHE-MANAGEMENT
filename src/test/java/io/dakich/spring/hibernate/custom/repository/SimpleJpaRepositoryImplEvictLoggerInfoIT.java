@@ -6,21 +6,22 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@ActiveProfiles("detach")
+@ActiveProfiles("evict-logger-default")
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {TestConfig.class})
-class SimpleJpaRepositoryImplDetachIT extends AbstractSimpleJpaRepositoryImplIT{
+class SimpleJpaRepositoryImplEvictLoggerInfoIT extends AbstractSimpleJpaRepositoryImplIT{
 
   @Autowired
   private UserRepository userRepository;
+
 
   @Override
   protected UserRepository userRepository() {
     return userRepository;
   }
-  @Override
+
   protected CACHE_STRATEGY childExpectedCacheStrategy() {
-    return CACHE_STRATEGY.DETACH;
+    return CACHE_STRATEGY.EVICT;
   }
 
 

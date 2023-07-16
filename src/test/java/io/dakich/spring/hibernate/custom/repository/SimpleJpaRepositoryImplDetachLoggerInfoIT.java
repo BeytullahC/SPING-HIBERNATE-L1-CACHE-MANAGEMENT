@@ -6,10 +6,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@ActiveProfiles("detach")
+@ActiveProfiles("detach-logger-default")
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {TestConfig.class})
-class SimpleJpaRepositoryImplDetachIT extends AbstractSimpleJpaRepositoryImplIT{
+class SimpleJpaRepositoryImplDetachLoggerInfoIT extends AbstractSimpleJpaRepositoryImplIT{
 
   @Autowired
   private UserRepository userRepository;

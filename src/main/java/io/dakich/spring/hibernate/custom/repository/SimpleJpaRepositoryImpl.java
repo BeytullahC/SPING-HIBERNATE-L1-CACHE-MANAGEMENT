@@ -39,7 +39,7 @@ public class SimpleJpaRepositoryImpl<T, ID> extends SimpleJpaRepository<T, ID> {
   }
 
   private <S extends T> void clearL1Cache(Optional<S> one) {
-    if (one.isPresent()) {
+    if (one!=null && one.isPresent()) {
       clearL1Cache(one.get());
     }
   }

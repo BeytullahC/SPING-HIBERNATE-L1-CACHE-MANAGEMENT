@@ -33,7 +33,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 @SpringBootTest(classes = TestConfig.class)
 @ExtendWith(SpringExtension.class)
-public class AbstractTransaction {
+public abstract class AbstractTransaction {
   private static final Logger LOG = LoggerFactory.getLogger(AbstractTransaction.class);
   @Autowired
   private EntityManager entityManager;
@@ -61,19 +61,19 @@ public class AbstractTransaction {
 
   @Test
   void testSaveParallel() {
-
+    Assertions.assertTrue(childExpectedCacheStrategy()==CacheManager.getCacheStrategy());
     final Role role = roleRepository.save(new Role("test"));
     final List<Integer> list = new ArrayList<>();
     transactionTemplate.setIsolationLevel(TransactionDefinition.ISOLATION_READ_UNCOMMITTED);
     transactionTemplate.executeWithoutResult(res -> {
       userRepository.save(
-          new User("test" + 1, "test" + 1, "test" + 1, role));
+          new User("test" + 6, "test" + 6, "test" + 6, role));
       userRepository.save(
-          new User("test" + 2, "test" + 2, "test" + 2, role));
+          new User("test" + 7, "test" + 7, "test" + 7, role));
       userRepository.save(
-          new User("test" + 3, "test" + 3, "test" + 3, role));
+          new User("test" + 8, "test" + 8, "test" + 8, role));
     });
-    await().atMost(100L, TimeUnit.MILLISECONDS);
+    await().atMost(600L, TimeUnit.MILLISECONDS);
 
     final List<User> all = userRepository.findAll();
     all.forEach(a -> LOG.warn("DATA:{}", a.isActive()));
@@ -81,23 +81,23 @@ public class AbstractTransaction {
     Assertions.assertTrue(userRepository.findById(2).get().isActive());
     Assertions.assertTrue(userRepository.findById(3).get().isActive());
     transactionTemplate.executeWithoutResult(res -> {
-      final List<User> all1 = userRepository.findAll();
-      final Future upd1 = taskExecutor.submit(
+      final List<User> all6 = userRepository.findAll();
+      final Future upd6 = taskExecutor.submit(
           () -> execOutOfTrans("UPDATE SD_User set ACTIVE=FALSE where id=1"));
-      final Future upd2 = taskExecutor.submit(
+      final Future upd7 = taskExecutor.submit(
           () -> execOutOfTrans("UPDATE SD_User set ACTIVE=FALSE where id=2"));
-      await().atMost(1, SECONDS).until(() -> upd1.isDone() && upd2.isDone());
-      final List<User> all3 = userRepository.findAll();
-      final List<User> all2 = userRepository.findAll(Sort.by(Order.asc("id")));
+      await().atMost(6, SECONDS).until(() -> upd6.isDone() && upd7.isDone());
+      final List<User> all8 = userRepository.findAll();
+      final List<User> all7 = userRepository.findAll(Sort.by(Order.asc("id")));
       LOG.warn(String.valueOf(list.size()));
-      all2.forEach(a -> LOG.warn("DATA 2:{}", a.isActive()));
+      all7.forEach(a -> LOG.warn("DATA 7:{}", a.isActive()));
 
       Assertions.assertFalse(userRepository.findById(1).get().isActive());
       Assertions.assertFalse(userRepository.findById(2).get().isActive());
       Assertions.assertTrue(userRepository.findById(3).get().isActive());
-      Assertions.assertFalse(all2.get(0).isActive());
-      Assertions.assertFalse(all2.get(1).isActive());
-      Assertions.assertTrue(all2.get(2).isActive());
+      Assertions.assertFalse(all7.get(0).isActive());
+      Assertions.assertFalse(all7.get(1).isActive());
+      Assertions.assertTrue(all7.get(2).isActive());
     });
 
   }
@@ -121,8 +121,8 @@ public class AbstractTransaction {
           throw savedException;
         }
       }
-    } catch (SQLException ex1) {
-      throw new RuntimeException(ex1);
+    } catch (SQLException ex6) {
+      throw new RuntimeException(ex6);
     }
   }
 
@@ -130,4 +130,6 @@ public class AbstractTransaction {
     return (root, query, criteriaBuilder)
         -> criteriaBuilder.like(root.get("lastname"), "%" + name + "%");
   }
+
+  protected abstract CACHE_STRATEGY childExpectedCacheStrategy();
 }

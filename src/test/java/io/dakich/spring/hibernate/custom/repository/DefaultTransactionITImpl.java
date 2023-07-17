@@ -60,6 +60,7 @@ public class DefaultTransactionITImpl {
 
   @Test
   void testSaveParallel() throws InterruptedException, ExecutionException {
+    Assertions.assertTrue(CacheManager.getCacheStrategy()==CACHE_STRATEGY.L1_CACHE_ACTIVE);
     roleRepository.save(new Role("test"));
     transactionTemplate.executeWithoutResult(status -> {
       final List<Integer> list = new ArrayList<>();

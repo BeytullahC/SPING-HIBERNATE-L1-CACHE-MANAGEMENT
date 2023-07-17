@@ -9,10 +9,17 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ActiveProfiles("evict-logger-default")
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {TestConfig.class})
-class SimpleJpaRepositoryImplEvictLoggerInfoIT extends AbstractSimpleJpaRepositoryImplIT{
+class SimpleJpaRepositoryImplEvictLoggerInfoIT extends AbstractSimpleJpaRepositoryImplIT {
 
   @Autowired
   private UserRepository userRepository;
+
+  @Autowired
+  private RoleRepository roleRepository;
+
+  public RoleRepository roleRepository() {
+    return roleRepository;
+  }
 
 
   @Override

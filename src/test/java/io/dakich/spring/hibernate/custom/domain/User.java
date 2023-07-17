@@ -129,10 +129,7 @@ public class User {
   @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   private Set<User> colleagues;
 
-  @ManyToMany(cascade = {
-      CascadeType.PERSIST,
-      CascadeType.MERGE
-  })
+  @ManyToMany(cascade = {CascadeType.REFRESH})
   private Set<Role> roles;
 
   @ManyToOne(fetch = FetchType.LAZY)

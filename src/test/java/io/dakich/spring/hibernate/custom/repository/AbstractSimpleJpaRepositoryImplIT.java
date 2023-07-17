@@ -21,6 +21,9 @@ abstract class AbstractSimpleJpaRepositoryImplIT {
 
 
   protected abstract UserRepository userRepository();
+
+  protected abstract RoleRepository roleRepository();
+
   protected abstract CACHE_STRATEGY childExpectedCacheStrategy();
   @BeforeEach
   void cacheModeTest(){
@@ -30,7 +33,8 @@ abstract class AbstractSimpleJpaRepositoryImplIT {
   @Order(1)
   @Transactional(transactionManager = "transactionManager",propagation = Propagation.REQUIRES_NEW)
   public void contextTest() {
-    final User user = new User("test", "test", "test", new Role("test"));
+    final Role role = roleRepository().save(new Role("test"));
+    final User user = new User("test", "test", "test", role);
     final User save = userRepository().save(user);
     userRepository().findOne(Example.of(save));
     userRepository().getOne(save.getId());

@@ -9,10 +9,17 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ActiveProfiles("evict")
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {TestConfig.class})
-class SimpleJpaRepositoryImplEvictIT extends AbstractSimpleJpaRepositoryImplIT{
+class SimpleJpaRepositoryImplEvictIT extends AbstractSimpleJpaRepositoryImplIT {
 
   @Autowired
   private UserRepository userRepository;
+
+  @Autowired
+  private RoleRepository roleRepository;
+
+  public RoleRepository roleRepository() {
+    return roleRepository;
+  }
 
 
   @Override

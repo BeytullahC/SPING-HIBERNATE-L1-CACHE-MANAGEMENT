@@ -11,11 +11,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
+import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
@@ -69,7 +71,17 @@ public class TestConfig {
   @EventListener
   public void handleContextRefreshEvent(ContextRefreshedEvent ctxStartEvt) {
     CacheManager.setCacheStrategy(env.getProperty("hibernate.l1.cache.strategy", "default"));
-    LOG.error("CACHE STRATEGY:"+CacheManager.getCacheStrategy());
+    LOG.error("CACHE STRATEGY:" + CacheManager.getCacheStrategy());
+  }
+
+  @Bean
+  public AsyncTaskExecutor threadPoolTaskExecutor() {
+    ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+    executor.setCorePoolSize(4);
+    executor.setMaxPoolSize(6);
+    executor.setThreadNamePrefix("test_task_executor");
+    executor.initialize();
+    return executor;
   }
 
 }

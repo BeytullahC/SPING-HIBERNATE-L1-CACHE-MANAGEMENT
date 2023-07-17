@@ -9,10 +9,17 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ActiveProfiles("default")
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {TestConfig.class})
-class SimpleJpaRepositoryImplDefaultIT extends AbstractSimpleJpaRepositoryImplIT{
+class SimpleJpaRepositoryImplDefaultIT extends AbstractSimpleJpaRepositoryImplIT {
 
   @Autowired
   private UserRepository userRepository;
+
+  @Autowired
+  private RoleRepository roleRepository;
+
+  public RoleRepository roleRepository() {
+    return roleRepository;
+  }
 
   @Override
   protected UserRepository userRepository() {
@@ -23,6 +30,7 @@ class SimpleJpaRepositoryImplDefaultIT extends AbstractSimpleJpaRepositoryImplIT
   protected CACHE_STRATEGY childExpectedCacheStrategy() {
     return CACHE_STRATEGY.L1_CACHE_ACTIVE;
   }
+
 
 }
 

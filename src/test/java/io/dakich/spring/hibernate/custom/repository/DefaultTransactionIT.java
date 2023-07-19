@@ -2,6 +2,9 @@ package io.dakich.spring.hibernate.custom.repository;
 
 import io.dakich.spring.hibernate.custom.domain.Role;
 import io.dakich.spring.hibernate.custom.domain.User;
+import io.dakich.spring.hibernate.custom.repository.config.TestConfig;
+import io.dakich.spring.hibernate.custom.repository.sample.RoleRepository;
+import io.dakich.spring.hibernate.custom.repository.sample.UserRepository;
 import jakarta.persistence.EntityManager;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,7 +15,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import javax.sql.DataSource;
-import org.hibernate.Session;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

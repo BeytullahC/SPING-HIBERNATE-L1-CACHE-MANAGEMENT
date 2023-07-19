@@ -76,10 +76,10 @@
         <artifactId>maven-failsafe-plugin</artifactId>
         <version>3.1.2</version>
         <configuration>
-          <forkCount>6</forkCount>
+          <forkCount>3</forkCount>
           <forkedProcessTimeoutInSeconds>90</forkedProcessTimeoutInSeconds>
           <threadCountClasses>1</threadCountClasses>
-          <threadCount>6</threadCount>
+          <threadCount>3</threadCount>
           <perCoreThreadCount>false</perCoreThreadCount>
           <!--suppress UnresolvedMavenProperty -->
           <argLine>${testArgLine}</argLine>

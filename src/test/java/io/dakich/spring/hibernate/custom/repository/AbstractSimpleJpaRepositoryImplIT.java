@@ -2,6 +2,8 @@ package io.dakich.spring.hibernate.custom.repository;
 
 import io.dakich.spring.hibernate.custom.domain.Role;
 import io.dakich.spring.hibernate.custom.domain.User;
+import io.dakich.spring.hibernate.custom.repository.sample.RoleRepository;
+import io.dakich.spring.hibernate.custom.repository.sample.UserRepository;
 import java.util.Collections;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

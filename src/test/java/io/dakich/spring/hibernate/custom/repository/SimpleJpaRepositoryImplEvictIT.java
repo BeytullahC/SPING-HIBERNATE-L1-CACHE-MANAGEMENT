@@ -1,5 +1,8 @@
 package io.dakich.spring.hibernate.custom.repository;
 
+import io.dakich.spring.hibernate.custom.repository.config.TestConfig;
+import io.dakich.spring.hibernate.custom.repository.sample.RoleRepository;
+import io.dakich.spring.hibernate.custom.repository.sample.UserRepository;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

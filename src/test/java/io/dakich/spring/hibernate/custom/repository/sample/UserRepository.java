@@ -1,4 +1,4 @@
-package io.dakich.spring.hibernate.custom.repository;
+package io.dakich.spring.hibernate.custom.repository.sample;
 
 import io.dakich.spring.hibernate.custom.domain.NameOnlyDto;
 import io.dakich.spring.hibernate.custom.domain.Role;

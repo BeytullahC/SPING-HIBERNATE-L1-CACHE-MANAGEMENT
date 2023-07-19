@@ -1,20 +1,17 @@
-package io.dakich.spring.hibernate.custom.repository;
+package io.dakich.spring.hibernate.custom.repository.interceptor;
 
+import io.dakich.spring.hibernate.custom.repository.ApplicationContextUtil;
 import java.lang.reflect.Method;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
+import javax.sql.DataSource;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.InvocationInterceptor;
 import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.support.TransactionTemplate;
-
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.Statement;
 
 
 public class TestDurationReportExtension implements InvocationInterceptor {
@@ -27,36 +24,6 @@ public class TestDurationReportExtension implements InvocationInterceptor {
         extensionContext);
     cleanupDatabase();
   }
-
-  /**@Override
-  public void interceptTestMethod(Invocation<Void> invocation,
-      ReflectiveInvocationContext<Method> invocationContext,
-      ExtensionContext extensionContext) throws Throwable {
-    AtomicReference<Throwable> t = new AtomicReference<>(null);
-    long beforeTest = System.currentTimeMillis();
-    try {
-      final PlatformTransactionManager bean = ApplicationContextUtil.getBean(
-          PlatformTransactionManager.class);
-      new TransactionTemplate(bean).executeWithoutResult((a)-> {
-            try {
-              invocation.proceed();
-            } catch (Throwable e) {
-              System.err.println(e);
-              t.set(e);
-            }
-          }
-          );
-
-    }catch (Throwable tt){
-      System.err.println(tt);
-      t.set(tt);
-    }
-    if(t.get()!=null)
-      throw new RuntimeException(t.get());
-
-
-  }*/
-
 
 
   private void cleanupDatabase() throws SQLException {
@@ -93,6 +60,5 @@ public class TestDurationReportExtension implements InvocationInterceptor {
     s.execute("SET REFERENTIAL_INTEGRITY TRUE");
     s.close();
     c.close();
-    System.out.println("\n\nCLEANUP SUCCESS\n\n");
   }
 }

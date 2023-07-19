@@ -1,5 +1,7 @@
-package io.dakich.spring.hibernate.custom.repository;
+package io.dakich.spring.hibernate.custom.repository.config;
 
+import io.dakich.spring.hibernate.custom.repository.CacheManager;
+import io.dakich.spring.hibernate.custom.repository.SimpleJpaRepositoryImpl;
 import jakarta.persistence.EntityManagerFactory;
 import java.util.Properties;
 import javax.sql.DataSource;
@@ -21,7 +23,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@EnableJpaRepositories(basePackages = "io.dakich",
+@EnableJpaRepositories(basePackages = "io.dakich.spring.hibernate.custom.repository.sample",
     repositoryBaseClass = SimpleJpaRepositoryImpl.class)
 @EnableTransactionManagement
 public class TestConfig {
@@ -44,7 +46,7 @@ public class TestConfig {
   public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
     final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
     em.setDataSource(dataSource);
-    em.setPackagesToScan("io.dakich");
+    em.setPackagesToScan("io.dakich.spring.hibernate.custom.domain");
     em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
     em.setJpaProperties(additionalProperties());
     return em;

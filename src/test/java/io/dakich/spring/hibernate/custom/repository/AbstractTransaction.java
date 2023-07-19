@@ -5,6 +5,9 @@ import static org.awaitility.Awaitility.await;
 
 import io.dakich.spring.hibernate.custom.domain.Role;
 import io.dakich.spring.hibernate.custom.domain.User;
+import io.dakich.spring.hibernate.custom.repository.config.TestConfig;
+import io.dakich.spring.hibernate.custom.repository.sample.RoleRepository;
+import io.dakich.spring.hibernate.custom.repository.sample.UserRepository;
 import jakarta.persistence.EntityManager;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -106,7 +109,6 @@ public abstract class AbstractTransaction {
       SQLException savedException = null;
       try {
         final int i = conn.prepareStatement(sql).executeUpdate();
-        System.err.println(i);
         // Do things with connection in transaction here...
         conn.commit();
       } catch (SQLException ex) {

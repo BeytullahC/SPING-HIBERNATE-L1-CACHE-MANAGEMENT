@@ -126,10 +126,10 @@ public class User {
   @Column(nullable = false, unique = true)
   private String emailAddress;
 
-  @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  @ManyToMany(cascade = {CascadeType.ALL})
   private Set<User> colleagues;
 
-  @ManyToMany(cascade = {CascadeType.REFRESH})
+  @ManyToMany(cascade = {CascadeType.REFRESH,CascadeType.MERGE})
   private Set<Role> roles;
 
   @ManyToOne(fetch = FetchType.LAZY)

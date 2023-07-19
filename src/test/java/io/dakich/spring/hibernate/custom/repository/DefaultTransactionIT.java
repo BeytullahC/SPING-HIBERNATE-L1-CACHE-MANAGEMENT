@@ -12,6 +12,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import javax.sql.DataSource;
+import org.hibernate.Session;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,15 +26,17 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
-@ActiveProfiles("default")
+@ActiveProfiles("default-trx")
 @SpringBootTest(classes = TestConfig.class)
 @ExtendWith(SpringExtension.class)
-public class DefaultTransactionITImpl {
+@Transactional
+public class DefaultTransactionIT {
 
   private static final Logger LOG = LoggerFactory.getLogger(
-      io.dakich.spring.hibernate.custom.repository.DefaultTransactionITImpl.class);
+      io.dakich.spring.hibernate.custom.repository.DefaultTransactionIT.class);
   @Autowired
   private PlatformTransactionManager transactionManager;
 
@@ -62,18 +65,12 @@ public class DefaultTransactionITImpl {
   void testSaveParallel() throws InterruptedException, ExecutionException {
     Assertions.assertTrue(CacheManager.getCacheStrategy()==CACHE_STRATEGY.L1_CACHE_ACTIVE);
     roleRepository.save(new Role("test"));
+
     transactionTemplate.executeWithoutResult(status -> {
       final List<Integer> list = new ArrayList<>();
-      final Future<Boolean> submit = taskExecutor.submit(() -> list.add(save(1)));
-      final Future<Boolean> submit1 = taskExecutor.submit(() -> list.add(save(2)));
-      final Future<Boolean> submit2 = taskExecutor.submit(() -> list.add(save(3)));
-      while (!(submit.isDone() && submit1.isDone() && submit2.isDone())) {
-        try {
-          TimeUnit.MILLISECONDS.sleep(1);
-        } catch (InterruptedException e) {
-          throw new RuntimeException(e);
-        }
-      }
+      save(1);
+      save(2);
+      save(3);
       final List<User> all = userRepository.findAll();
       all.forEach(a -> LOG.warn("DATA:{}", a.isActive()));
       Assertions.assertTrue(userRepository.findById(1).get().isActive());
@@ -94,6 +91,28 @@ public class DefaultTransactionITImpl {
       }
       final List<User> all2 = userRepository.findAll();
       LOG.warn(String.valueOf(list.size()));
+      all2.forEach(a -> LOG.warn("DATA:{}", a.isActive()));
+
+      Assertions.assertTrue(userRepository.findById(1).get().isActive());
+      Assertions.assertTrue(userRepository.findById(2).get().isActive());
+      Assertions.assertTrue(userRepository.findById(3).get().isActive());
+
+    });
+
+    transactionTemplate.executeWithoutResult(status -> {
+      final Future upd1 = taskExecutor.submit(
+          () -> execOutOfTrans("UPDATE SD_User set ACTIVE='false' where id=1"));
+      final Future upd2 = taskExecutor.submit(
+          () -> execOutOfTrans("UPDATE SD_User set ACTIVE='false' where id=2"));
+
+      while (!(upd1.isDone() && upd2.isDone())) {
+        try {
+          TimeUnit.MILLISECONDS.sleep(1);
+        } catch (InterruptedException e) {
+          throw new RuntimeException(e);
+        }
+      }
+      final List<User> all2 = userRepository.findAll();
       all2.forEach(a -> LOG.warn("DATA:{}", a.isActive()));
 
       Assertions.assertTrue(userRepository.findById(1).get().isActive());

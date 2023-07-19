@@ -125,7 +125,7 @@ abstract class AbstractSimpleJpaRepositoryUnitTests {
 
   @Test // DATAJPA-177, gh-2719
   void doesNotThrowExceptionIfEntityToDeleteDoesNotExist() {
-    Assertions.assertThrows(EmptyResultDataAccessException.class,() -> repo.deleteById(4711));
+     repo.deleteById(4711);
   }
 
   @Test // DATAJPA-689, DATAJPA-696

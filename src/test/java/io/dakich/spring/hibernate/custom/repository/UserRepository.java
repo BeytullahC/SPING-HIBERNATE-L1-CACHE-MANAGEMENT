@@ -469,7 +469,7 @@ public interface UserRepository extends JpaRepository<User, Integer>,
       + "select u.*, rownum() as RN from (" //
       + "select * from SD_User ORDER BY ucase(firstname)" //
       + ") u" //
-      + ") where RN between ?#{ #pageable.offset +1 } and ?#{#pageable.offset + #pageable.pageSize}", //
+      + ") where RN between ?#{#pageable.offset +1 } and ?#{#pageable.offset + #pageable.pageSize}", //
       countQuery = "select count(u.id) from SD_User u", //
       nativeQuery = true)
   Page<User> findUsersInNativeQueryWithPagination(Pageable pageable);

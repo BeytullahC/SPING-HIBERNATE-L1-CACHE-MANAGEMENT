@@ -67,6 +67,7 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.22.2</version>
         <configuration>
+          <!--suppress UnresolvedMavenProperty -->
           <argLine>${surefireArgLine}</argLine>
         </configuration>
       </plugin>
@@ -75,12 +76,12 @@
         <artifactId>maven-failsafe-plugin</artifactId>
         <version>3.1.2</version>
         <configuration>
-          <forkMode>always</forkMode>
           <forkCount>3</forkCount>
           <forkedProcessTimeoutInSeconds>60</forkedProcessTimeoutInSeconds>
           <threadCountClasses>1</threadCountClasses>
           <threadCount>3</threadCount>
           <perCoreThreadCount>false</perCoreThreadCount>
+          <!--suppress UnresolvedMavenProperty -->
           <argLine>${testArgLine}</argLine>
           <includes>
             <include>*.*IT.class</include>

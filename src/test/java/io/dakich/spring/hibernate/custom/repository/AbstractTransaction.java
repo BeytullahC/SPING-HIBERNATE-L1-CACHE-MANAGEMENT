@@ -11,7 +11,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,7 +24,6 @@ import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
@@ -73,7 +71,6 @@ public abstract class AbstractTransaction {
       userRepository.save(
           new User("test" + 8, "test" + 8, "test" + 8, role));
     });
-    await().atMost(600L, TimeUnit.MILLISECONDS);
 
     final List<User> all = userRepository.findAll();
     all.forEach(a -> LOG.warn("DATA:{}", a.isActive()));

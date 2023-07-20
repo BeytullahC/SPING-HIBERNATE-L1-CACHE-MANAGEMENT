@@ -1,2 +1,0 @@
-# default / evict / detach
-hibernate.l1.cache.strategy=evict

@@ -1,13 +1,11 @@
 package io.dakich.spring.hibernate.custom.repository;
 
 import jakarta.persistence.EntityManager;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,7 +15,6 @@ import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
 @NoRepositoryBean
 @Transactional(readOnly = true)
@@ -55,7 +52,6 @@ public class SimpleJpaRepositoryImpl<T, ID> extends SimpleJpaRepository<T, ID> {
   }
 
   private <S extends T> void clearL1Cache(S s) {
-    if (CACHE_STRATEGY.L1_CACHE_ACTIVE!=CacheManager.getCacheStrategy()) {
       final Session session = entityManager.unwrap(Session.class);
       if (session.contains(s)) {
         if (CacheManager.getCacheStrategy() == CACHE_STRATEGY.EVICT) {
@@ -69,19 +65,14 @@ public class SimpleJpaRepositoryImpl<T, ID> extends SimpleJpaRepository<T, ID> {
         else
           LOGGER.debug("L1 CACHE Clear NOT Executed");
       }
-
-    }
   }
 
   @Override
   @Transactional
   public <S extends T> S save(S entity) {
-    final Session session = entityManager.unwrap(Session.class);
     final S save = super.save(entity);
-    if(CACHE_STRATEGY.L1_CACHE_ACTIVE!=CacheManager.getCacheStrategy()) {
-      session.flush();
-      clearL1Cache(save);
-    }
+    flush();
+    clearL1Cache(save);
     return save;
   }
 

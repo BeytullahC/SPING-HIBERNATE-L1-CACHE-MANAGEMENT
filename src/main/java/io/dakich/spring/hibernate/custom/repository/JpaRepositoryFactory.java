@@ -13,6 +13,7 @@ import org.springframework.data.repository.core.RepositoryMetadata;
  * Sample implementation of a custom {@link org.springframework.data.jpa.repository.support.JpaRepositoryFactory} to use a custom repository base class.
  *
  * @author Oliver Gierke
+ * @author BeytullahC
  */
 public class JpaRepositoryFactory extends
     org.springframework.data.jpa.repository.support.JpaRepositoryFactory {

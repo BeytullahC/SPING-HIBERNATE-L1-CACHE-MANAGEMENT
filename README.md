@@ -1,6 +1,6 @@
 # Spring Hibernate L1 Cache Management
 
-![build workflow](https://github.com/BeytullahC/SPING-HIBERNATE-L1-CACHE-MANAGEMENT/actions/workflows/test.yaml/badge.svg) ![Coverage](.github/badges/jacoco.svg) ![Branches](.github/badges/branches.svg) [![License: Unlicense](https://img.shields.io/badge/license-Unlicense-blue.svg)](http://unlicense.org/)
+![build workflow](https://github.com/BeytullahC/SPING-HIBERNATE-L1-CACHE-MANAGEMENT/actions/workflows/test.yaml/badge.svg) ![Coverage](.github/badges/jacoco.svg) ![Branches](.github/badges/branches.svg)
 
 ## Overview
 
